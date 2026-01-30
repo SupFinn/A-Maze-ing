@@ -4,7 +4,7 @@ def read_config(filename: str) -> Dict[str, Any]:
     config: Dict[str, Any] = {}
 
     try:
-        with open(filename) as config_file:
+        with open(filename, "r") as config_file:
             for line in config_file:
                 line = line.strip()
                 if not line or line.startswith("#"):
