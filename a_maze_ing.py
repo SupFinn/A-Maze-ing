@@ -1,15 +1,21 @@
 #!/usr/bin/python3
 
-from maze_generator import read_config
+import sys
+from config_validation import read_config, validation
 
 def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 a_maze_ing.py <config_file>")
+        return
+    config_file = sys.argv[1]
     try:
-        config = read_config("config.txt")
-        print("Config loaded successfully!")
-        print(config)
+        config = read_config(config_file)
+        validation(config)
     except Exception as e:
-        print(f"Error reading config: {e}")
+        print(e)
+        return
 
+    print(config)
 
 if __name__ == "__main__":
     main()

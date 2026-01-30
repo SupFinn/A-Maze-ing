@@ -1,25 +1,6 @@
 from typing import Any, Dict, Tuple
 import random
 
-def read_config(filename: str) -> Dict[str, Any]:
-    config: Dict = {}
-    with open(filename) as config_file:
-        for line in config_file:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            key, value = line.split('=', 1)
-            if key == "WIDTH" or key == "HEIGHT":
-                value = int(value)
-            elif key == "ENTRY" or key == "EXIT":
-                parts = value.split(",")
-                value = tuple(int(p) for p in parts)
-            elif key == "PERFECT":
-                value = value.strip().lower() == "true"
-            config[key] = value
-    return config
-
-
 class Cell:
     def __init__(self):
         self.north = True
@@ -79,6 +60,13 @@ class MazeGenerator:
                 stack.append((next_x, next_y))
             else:
                 stack.pop()
+
+
+    def write_maze_hex(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                cell = self.grid[y][x]
+                
 
                 
 #    N

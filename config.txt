@@ -2,6 +2,8 @@
 WIDTH=5
 HEIGHT=5
 ENTRY=0,0
+# test=5
+# Noo="Allo"
 EXIT=4,4
 OUTPUT_FILE=maze.txt
-PERFECT=True
+PERFECT=Flase
