@@ -1,9 +1,7 @@
 # Maze config
-WIDTH=5
-HEIGHT=5
+WIDTH=17
+HEIGHT=13
 ENTRY=0,0
-# test=5
-# Noo="Allo"
-EXIT=4,4
+EXIT=16,12
 OUTPUT_FILE=maze.txt
-PERFECT=Flase
+PERFECT=True

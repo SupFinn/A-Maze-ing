@@ -30,8 +30,8 @@ def read_config(filename: str) -> Dict[str, Any]:
                         raise ValueError("PERFECT must be True or False")
                 config[key] = value
     except FileNotFoundError:
-        print(f"{config_file} File Not Found...")
-        return
+        raise FileNotFoundError(f"{config_file} File Not Found...")
+
     return config
 
 
