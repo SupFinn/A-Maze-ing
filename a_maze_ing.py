@@ -107,7 +107,7 @@ def main() -> None:
     perfect: bool = config["PERFECT"]
 
     show_path: bool = False
-    animation_speed: float = 0.02
+    animation_speed: float = 0.03
     pattern_color: str = "yellow"
     wall_color: str = "white"
     algorithm: str = "backtracking"

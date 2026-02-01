@@ -48,7 +48,7 @@ class MazeDisplay:
             'path': self.YELLOW,
             'wall': self.WHITE,
             'unvisited': self.BG_GRAY,
-            'search': self.MAGENTA
+            'search': self.CYAN
         }
 
     def set_color(self, element: str, color: str) -> None:
@@ -58,7 +58,7 @@ class MazeDisplay:
     def set_pattern_color(self, color_name: str) -> None:
         color_map = {
             'cyan': self.BG_BRIGHT_CYAN,
-            'yellow': self.BG_YELLOW,
+            'yellow': self.BG_BRIGHT_YELLOW,
             'magenta': self.BG_BRIGHT_MAGENTA,
             'blue': self.BG_BRIGHT_BLUE,
             'red': self.BG_BRIGHT_RED,
@@ -136,7 +136,7 @@ class MazeDisplay:
                 elif visited_cells and (x, y) in visited_cells:
                     print(f"{self.colors['search']} * {self.RESET}", end="")
                 elif path and (x, y) in path_cells:
-                    print(f"{self.colors['path']} * {self.RESET}", end="")
+                    print(f"{self.colors['path']} # {self.RESET}", end="")
                 else:
                     print("   ", end="")
 
