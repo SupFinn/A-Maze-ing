@@ -46,7 +46,7 @@ class MazeDisplay:
             'highlight': self.BG_BRIGHT_MAGENTA,
             'pattern': self.BG_BRIGHT_YELLOW,
             'path': self.YELLOW,
-            'wall': self.CYAN,
+            'wall': self.WHITE,
             'unvisited': self.BG_GRAY,
             'search': self.MAGENTA
         }
@@ -58,7 +58,7 @@ class MazeDisplay:
     def set_pattern_color(self, color_name: str) -> None:
         color_map = {
             'cyan': self.BG_BRIGHT_CYAN,
-            'yellow': self.BG_BRIGHT_YELLOW,
+            'yellow': self.BG_YELLOW,
             'magenta': self.BG_BRIGHT_MAGENTA,
             'blue': self.BG_BRIGHT_BLUE,
             'red': self.BG_BRIGHT_RED,
@@ -75,7 +75,6 @@ class MazeDisplay:
 
     @staticmethod
     def clear_screen() -> None:
-        # os.system('clear')
         print("\033[H", flush=True)
 
     def path_to_cells(self,

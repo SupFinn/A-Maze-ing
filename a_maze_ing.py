@@ -8,8 +8,7 @@ from maze_display import MazeDisplay
 
 def clear_screen() -> None:
     print("\033[2J\033[H", end="")
-    # os.system("clear")
-    print("\033[H", flush=True)
+    os.system("clear")
 
 def set_color(color: str):
     colors = {
