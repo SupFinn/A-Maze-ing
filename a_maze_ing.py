@@ -11,20 +11,31 @@ def clear_screen() -> None:
     # os.system("clear")
     print("\033[H", flush=True)
 
+def set_color(color: str):
+    colors = {
+        'reset': "\033[0m",
+        'red': "\033[91m",
+        'green': "\033[92m",
+        'yellow': "\033[93m",
+        'blue': "\033[94m",
+        'magenta': "\033[95m",
+        'cyan': "\033[96m",
+        'white': "\033[97m",
+        'gray': "\033[90m"        
+    }
+    return colors[color.lower()]
 
 def display_menu() -> None:
-    print("\n" + "\033[91m=\033[0m"*50)
-    print(" "*16 + "\033[41m MAZE CONTROL MENU \033[0m")
-    print("\033[91m=\033[0m"*50)
-    # print("\033[92m", end="")
+    print("\n" + "="*50)
+    print(" "*16 + "\033[43m MAZE CONTROL MENU \033[0m")
+    print("="*50)
     print("  1. Re-generate maze")
     print("  2. Show/Hide solution path")
     print("  3. Change wall colors")
     print("  4. Change '42' pattern color")
     print("  5. Change maze generation algorithms")
-    print("  6. Perfect (True or False)")
     print("  q. Quit")
-    print("\033[91m=\033[0m"*50)
+    print("="*50)
 
 
 def get_user_choice() -> str:
@@ -50,33 +61,15 @@ def choose_algorithm(current: str) -> str:
         return current
 
 
-def choose_perfect_mode(current: bool) -> bool:
-    """Let user toggle perfect/imperfect maze mode."""
-    print(f"\nCurrent mode: {'PERFECT' if current else 'IMPERFECT'}")
-    print("\nChoose maze type:")
-    print("  1. Perfect (only one solution path)")
-    print("  2. Imperfect (multiple paths - breaks random walls)")
-
-    choice = input("\nChoose mode (1-2): ").strip()
-
-    if choice == '1':
-        return True
-    elif choice == '2':
-        return False
-    else:
-        print("Invalid choice. Keeping current mode.")
-        return current
-
-
 def choose_color(current: str) -> str:
     print(f"\nCurrent color: {current.upper()}")
     print("Available colors:")
-    print("  1. Red")
-    print("  2. Green")
-    print("  3. Yellow")
-    print("  4. Blue")
-    print("  5. Magenta")
-    print("  6. Cyan")
+    print(f"{set_color('red')}  1. Red")
+    print(f"{set_color('green')}  2. Green")
+    print(f"{set_color('yellow')}  3. Yellow")
+    print(f"{set_color('blue')}  4. Blue")
+    print(f"{set_color('magenta')}  5. Magenta")
+    print(f"{set_color('cyan')}  6. Cyan{set_color('reset')}")
     print("  7. White")
 
     color_map = {
@@ -151,7 +144,6 @@ def main() -> None:
         if choice == '1':
             clear_screen()
             print("Regenerating maze...\n")
-            print("Watch as the maze carves through the solid blocks!\n")
 
             maze = MazeGenerator(width, height)
             maze.add_42_pattern()
@@ -191,7 +183,6 @@ def main() -> None:
                                   show_generation=False)
 
         elif choice == '3':
-            print("\nChange wall color (affects all walls)")
             new_color = choose_color(wall_color)
             wall_color = new_color
 
@@ -268,61 +259,6 @@ def main() -> None:
                                       path if show_path else None,
                                       show_generation=False)
 
-        elif choice == '6':
-            new_perfect = choose_perfect_mode(perfect)
-
-            if new_perfect != perfect:
-                perfect = new_perfect
-
-                if not perfect:
-                    clear_screen()
-                    print("Breaking random walls to create "
-                          "multiple paths...\n")
-                    maze.break_walls(chance=0.1)
-
-                    maze.reset_visited()
-                    print("Re-solving maze...\n")
-                    path = maze.solve_bfs(entry, exit_, display=display,
-                                          delay=animation_speed)
-                    maze.write_maze_hex(output, entry, exit_, path)
-
-                    clear_screen()
-                    print("Maze is now IMPERFECT (multiple paths exist)!\n")
-                else:
-                    clear_screen()
-                    print("Regenerating maze as PERFECT...\n")
-
-                    maze = MazeGenerator(width, height)
-                    maze.add_42_pattern()
-
-                    if algorithm == 'backtracking':
-                        maze.generate_backtracking(entry, display=display,
-                                                   delay=animation_speed)
-                    elif algorithm == 'prims':
-                        maze.generate_prims(entry, display=display,
-                                            delay=animation_speed)
-
-                    maze.reset_visited()
-
-                    print("\nSolving maze...\n")
-                    path = maze.solve_bfs(entry, exit_, display=display,
-                                          delay=animation_speed)
-                    maze.write_maze_hex(output, entry, exit_, path)
-
-                    clear_screen()
-                    print("Maze is now PERFECT (only one path)!\n")
-
-                display.display_ascii(maze.grid, entry, exit_,
-                                      maze.pattern_cells,
-                                      path if show_path else None,
-                                      show_generation=False)
-            else:
-                clear_screen()
-                print("Mode unchanged.\n")
-                display.display_ascii(maze.grid, entry, exit_,
-                                      maze.pattern_cells,
-                                      path if show_path else None,
-                                      show_generation=False)
 
         elif choice == 'q':
             clear_screen()
