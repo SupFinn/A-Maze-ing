@@ -1,20 +1,9 @@
-"""
-Maze display module for ASCII visualization with ANSI colors.
-"""
 from typing import Tuple, Optional, Set
 import sys
 import os
 
 
 class MazeDisplay:
-    """
-    Handles visualization of mazes in ASCII format with ANSI colors.
-    
-    Attributes:
-        width: Maze width in cells
-        height: Maze height in cells
-        colors: Dictionary of color configurations
-    """
     
     # ANSI color codes
     RESET = "\033[0m"
@@ -50,46 +39,25 @@ class MazeDisplay:
     BG_BRIGHT_WHITE = "\033[107m"
     
     def __init__(self, width: int, height: int) -> None:
-        """
-        Initialize maze display.
-        
-        Args:
-            width: Maze width in cells
-            height: Maze height in cells
-        """
         self.width: int = width
         self.height: int = height
-        
-        # Default color configuration
+
         self.colors = {
-            'entry': self.GREEN,                    # Bright green for start (S)
-            'exit': self.RED,                       # Bright red for exit (E)
-            'highlight': self.BG_BRIGHT_MAGENTA,    # Magenta block for generation animation
-            'pattern': self.BG_BRIGHT_YELLOW,       # Yellow background for '42' pattern
-            'path': self.YELLOW,                    # Yellow # for solution path
-            'wall': self.CYAN,                      # Cyan walls (great contrast)
-            'unvisited': self.BG_GRAY,              # Gray blocks for unvisited cells
-            'search': self.CYAN                     # Cyan # for BFS search animation
+            'entry': self.GREEN,
+            'exit': self.RED,
+            'highlight': self.BG_BRIGHT_MAGENTA,
+            'pattern': self.BG_BRIGHT_YELLOW,
+            'path': self.YELLOW,
+            'wall': self.CYAN,
+            'unvisited': self.BG_GRAY,
+            'search': self.CYAN
         }
-        
+
     def set_color(self, element: str, color: str) -> None:
-        """
-        Set color for a specific maze element.
-        
-        Args:
-            element: Element name ('entry', 'exit', 'highlight', 'pattern', 'path', 'wall')
-            color: ANSI color code
-        """
         if element in self.colors:
             self.colors[element] = color
     
     def set_pattern_color(self, color_name: str) -> None:
-        """
-        Set the color for the '42' pattern using predefined colors.
-        
-        Args:
-            color_name: Color name ('cyan', 'yellow', 'magenta', 'blue', 'red', 'green')
-        """
         color_map = {
             'cyan': self.BG_BRIGHT_CYAN,
             'yellow': self.BG_BRIGHT_YELLOW,
@@ -101,7 +69,7 @@ class MazeDisplay:
             'black': self.BG_BRIGHT_BLACK,
             'gray': self.BG_GRAY
         }
-        
+
         if color_name.lower() in color_map:
             self.colors['pattern'] = color_map[color_name.lower()]
         else:
@@ -109,23 +77,11 @@ class MazeDisplay:
 
     @staticmethod
     def clear_screen() -> None:
-        """Clear the terminal screen."""
-        import os
         os.system('clear')
 
     def path_to_cells(self, 
                      entry: Tuple[int, int], 
                      path: str) -> Set[Tuple[int, int]]:
-        """
-        Convert path string to set of cell coordinates.
-        
-        Args:
-            entry: Starting position (x, y)
-            path: Path string (N, E, S, W directions)
-            
-        Returns:
-            Set of (x, y) coordinates along the path
-        """
         x, y = entry
         cells: Set[Tuple[int, int]] = {(x, y)}
 
@@ -149,68 +105,44 @@ class MazeDisplay:
                     pattern_cells: Set[Tuple[int, int]],
                     path: Optional[str] = None,
                     highlight: Optional[Tuple[int, int]] = None,
-                    show_generation: bool = False,
+                    show_generation: bool = True,
                     visited_cells: Optional[Set[Tuple[int, int]]] = None) -> None:
-        """
-        Display maze in ASCII format with ANSI colors.
-        
-        Args:
-            grid: 2D list of Cell objects
-            entry: Entry position (x, y)
-            exit: Exit position (x, y)
-            pattern_cells: Set of cells that form the '42' pattern
-            path: Optional solution path to display
-            highlight: Optional cell to highlight (used during generation)
-            show_generation: Whether to show unvisited cells as blocks during generation
-            visited_cells: Optional set of visited cells during BFS (for animation)
-        """
         path_cells: Set[Tuple[int, int]] = set()
         if path:
             path_cells = self.path_to_cells(entry, path)
 
-        # Top border with wall color
         for x in range(self.width):
             print(f"{self.colors['wall']}+---{self.RESET}", end="")
         print(f"{self.colors['wall']}+{self.RESET}")
 
-        # Maze body
         for y in range(self.height):
-            # West walls and cell content
             for x in range(self.width):
                 cell = grid[y][x]
                 
-                # West wall with color
                 if cell.west:
                     print(f"{self.colors['wall']}|{self.RESET}", end="")
                 else:
                     print(" ", end="")
 
-                # Cell content priority order
                 if (x, y) == entry:
                     print(f"{self.colors['entry']} S {self.RESET}", end="")
                 elif (x, y) == exit:
                     print(f"{self.colors['exit']} E {self.RESET}", end="")
                 elif highlight and (x, y) == highlight:
-                    print(f"{self.colors['highlight']}   {self.RESET}", end="")  # Block during animation
+                    print(f"{self.colors['highlight']}   {self.RESET}", end="")
                 elif (x, y) in pattern_cells:
-                    # Display '42' pattern as solid colored block
                     print(f"{self.colors['pattern']}   {self.RESET}", end="")
                 elif show_generation and not cell.visited:
-                    # During generation: show unvisited cells as gray blocks
                     print(f"{self.colors['unvisited']}   {self.RESET}", end="")
                 elif visited_cells and (x, y) in visited_cells:
-                    # During solving: show visited cells as #
-                    print(f"{self.colors['search']} # {self.RESET}", end="")  # Cyan # for search
+                    print(f"{self.colors['search']} # {self.RESET}", end="")
                 elif path and (x, y) in path_cells:
-                    # Final solution path as #
-                    print(f"{self.colors['path']} # {self.RESET}", end="")  # Magenta # for solution
+                    print(f"{self.colors['path']} # {self.RESET}", end="")
                 else:
                     print("   ", end="")
 
-            # East border with color
             print(f"{self.colors['wall']}|{self.RESET}")
 
-            # South walls with color
             for x in range(self.width):
                 cell = grid[y][x]
                 if cell.south:

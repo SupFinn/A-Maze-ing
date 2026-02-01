@@ -1,40 +1,51 @@
 #!/usr/bin/env python3
-"""
-A-Maze-ing: Maze generator with animated visualization.
-
-This project has been created as part of the 42 curriculum by SupFinnthis.
-"""
 import sys
+import os
 from config_validation import read_config, validation
 from maze_generator import MazeGenerator
 from maze_display import MazeDisplay
 
 def clear_screen() -> None:
-    """Clear the screen."""
     print("\033[2J\033[H", end="")
-    sys.stdout.flush()
+    os.system("clear")
+
 
 def display_menu() -> None:
-    """Display the interactive menu."""
     print("\n" + "="*50)
-    print("         MAZE CONTROL MENU")
+    print(" "*16 + "MAZE CONTROL MENU")
     print("="*50)
     print("  1. Re-generate maze")
     print("  2. Show/Hide solution path")
     print("  3. Change wall colors")
     print("  4. Change '42' pattern color")
+    print("  5. Change maze generation algorithms")
+    print("  6. Perfect (True or False)")
     print("  q. Quit")
     print("="*50)
 
 
 def get_user_choice() -> str:
-    """Get user menu choice."""
     choice = input("\nEnter your choice: ").strip().lower()
     return choice
 
 
+def choose_perfect_mode(current: bool) -> bool:
+    print(f"\nCurrent mode: {'PERFECT' if current else 'IMPERFECT'}")
+    print("\nChoose maze type:")
+    print("  1. Perfect (only one solution path)")
+    print("  2. Imperfect (multiple paths possible)")
+
+    choice = input("\nChoose mode (1-2): ").strip()
+
+    if choice == '1':
+        return True
+    elif choice == '2':
+        return False
+    else:
+        print("Invalid choice. Keeping current mode.")
+        return current
+
 def choose_color(current: str) -> str:
-    """Let user choose a color."""
     print(f"\nCurrent color: {current.upper()}")
     print("Available colors:")
     print("  1. Red")
@@ -60,7 +71,6 @@ def choose_color(current: str) -> str:
 
 
 def main() -> None:
-    """Main entry point for maze generator."""
     if len(sys.argv) != 2:
         print("Usage: python3 a_maze_ing.py <config_file>")
         sys.exit(1)
@@ -74,7 +84,6 @@ def main() -> None:
         print(f"Error: {e}")
         sys.exit(1)
         
-    # Extract required configuration from file
     width: int = config["WIDTH"]
     height: int = config["HEIGHT"]
     entry: tuple = config["ENTRY"]
@@ -82,68 +91,55 @@ def main() -> None:
     output: str = config["OUTPUT_FILE"]
     perfect: bool = config["PERFECT"]
     
-    # Settings
     show_path: bool = False
     animation_speed: float = 0.02
     pattern_color: str = "yellow"
     wall_color: str = "white"
     
-    # Create display
     display = MazeDisplay(width, height)
     display.set_pattern_color(pattern_color)
     
-    # Generate initial maze with animation
     clear_screen()
     print("Generating maze...\n")
-    print("Watch as the maze carves through the solid blocks!\n")
-    
+
     maze = MazeGenerator(width, height)
     maze.add_42_pattern()
-    maze.generate_backtracking(entry, display=display, 
-                              animate=True, delay=animation_speed)
+    maze.generate_backtracking(entry, display=display, delay=animation_speed)
     maze.reset_visited()
     
     if not perfect:
         maze.break_walls(chance=0.1)
     
-    # Solve maze WITH ANIMATION
     print("\nSolving maze...\n")
-    path: str = maze.solve_bfs(entry, exit_, display=display,
-                               animate=True, delay=animation_speed)
+    path: str = maze.solve_bfs(entry, exit_, display=display, delay=animation_speed)
     
-    # Save to file
     maze.write_maze_hex(output, entry, exit_, path)
     
-    # Display final result
     clear_screen()
     print("Maze generation and solving complete!\n")
     display.display_ascii(maze.grid, entry, exit_, maze.pattern_cells,
                          path=path, show_generation=False)
     
-    # Interactive loop
     while True:
         display_menu()
         choice = get_user_choice()
         
         if choice == '1':
-            # Re-generate maze
             clear_screen()
             print("Regenerating maze...\n")
             print("Watch as the maze carves through the solid blocks!\n")
-            
+
             maze = MazeGenerator(width, height)
             maze.add_42_pattern()
-            maze.generate_backtracking(entry, display=display, 
-                                      animate=True, delay=animation_speed)
+            maze.generate_backtracking(entry, display=display, delay=animation_speed)
             maze.reset_visited()
             
             if not perfect:
                 maze.break_walls(chance=0.1)
             
-            # Solve with animation
+
             print("\nSolving maze...\n")
-            path = maze.solve_bfs(entry, exit_, display=display,
-                                 animate=True, delay=animation_speed)
+            path = maze.solve_bfs(entry, exit_, display=display, delay=animation_speed)
             maze.write_maze_hex(output, entry, exit_, path)
             
             clear_screen()
@@ -153,7 +149,6 @@ def main() -> None:
                                 show_generation=False)
         
         elif choice == '2':
-            # Toggle path display
             show_path = not show_path
             clear_screen()
             if show_path:
@@ -163,14 +158,12 @@ def main() -> None:
             display.display_ascii(maze.grid, entry, exit_, maze.pattern_cells,
                                 path if show_path else None,
                                 show_generation=False)
-        
+
         elif choice == '3':
-            # Change wall colors
             print("\nChange wall color (affects all walls)")
             new_color = choose_color(wall_color)
             wall_color = new_color
             
-            # Map to ANSI color codes
             ansi_map = {
                 'red': display.RED,
                 'green': display.GREEN,
@@ -190,7 +183,6 @@ def main() -> None:
                                 show_generation=False)
         
         elif choice == '4':
-            # Change pattern color
             print("\nChange '42' pattern color")
             new_color = choose_color(pattern_color)
             pattern_color = new_color
@@ -201,9 +193,46 @@ def main() -> None:
             display.display_ascii(maze.grid, entry, exit_, maze.pattern_cells,
                                 path if show_path else None,
                                 show_generation=False)
-        
+
+        elif choice == '5':
+            pass
+
+        elif choice == '6':
+            current = perfect
+            new_perfect = choose_perfect_mode(perfect)
+            if new_perfect != perfect:
+                perfect = new_perfect
+                clear_screen()
+                print("Regenerating maze...\n")
+                print(f"Mode: {'PERFECT' if perfect else 'IMPERFECT'} maze\n")
+                maze = MazeGenerator(width, height)
+                maze.add_42_pattern()
+                maze.generate_backtracking(entry, display=display, delay=animation_speed)
+                maze.reset_visited()
+                
+                if not perfect:
+                    maze.break_walls(chance=0.1)
+                
+                print("\nSolving maze...\n")
+                path = maze.solve_bfs(entry, exit_, display=display, delay=animation_speed)
+                maze.write_maze_hex(output, entry, exit_, path)
+                
+                clear_screen()
+                print(f"Maze regenerated as {'PERFECT' if perfect else 'IMPERFECT'}!\n")
+                display.display_ascii(maze.grid, entry, exit_, maze.pattern_cells,
+                                    path if show_path else None,
+                                    show_generation=False)
+            else:
+                clear_screen()
+                print("Mode unchanged.\n")
+                display.display_ascii(maze.grid, entry, exit_, maze.pattern_cells,
+                                    path if show_path else None,
+                                    show_generation=False)      
+                
+                
+
+
         elif choice == 'q':
-            # Quit
             clear_screen()
             print("Saving final maze to file...")
             maze.write_maze_hex(output, entry, exit_, path)
