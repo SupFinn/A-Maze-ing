@@ -3,6 +3,7 @@ import os
 from config_validation import read_config, validation
 from maze_generator import MazeGenerator
 from maze_display import MazeDisplay
+from typing import Tuple
 
 
 def clear_screen() -> None:
@@ -102,8 +103,8 @@ def main() -> None:
 
     width: int = config["WIDTH"]
     height: int = config["HEIGHT"]
-    entry: tuple = config["ENTRY"]
-    exit_: tuple = config["EXIT"]
+    entry: Tuple[int, int] = config["ENTRY"]
+    exit_: Tuple[int, int] = config["EXIT"]
     output: str = config["OUTPUT_FILE"]
     perfect: bool = config["PERFECT"]
 

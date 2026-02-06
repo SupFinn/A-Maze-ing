@@ -1,4 +1,5 @@
-from typing import Tuple, Optional, Set
+from typing import Tuple, Optional, Set, List
+from maze_generator import Cell
 
 
 class MazeDisplay:
@@ -96,7 +97,7 @@ class MazeDisplay:
         return cells
 
     def display_ascii(self,
-                      grid: list,
+                      grid: List[List[Cell]],
                       entry: Tuple[int, int],
                       exit: Tuple[int, int],
                       pattern_cells: Set[Tuple[int, int]],

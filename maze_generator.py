@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Set, Dict
+from typing import Tuple, Optional, Set, Dict, List
 from collections import deque
 import random
 import time
@@ -27,9 +27,9 @@ class MazeGenerator:
         if seed is not None:
             random.seed(seed)
 
-        self.grid: list = []
+        self.grid: List[List[Cell]] = []
         for y in range(self.height):
-            row: list = []
+            row: List[Cell] = []
             for x in range(self.width):
                 row.append(Cell())
             self.grid.append(row)
@@ -80,11 +80,11 @@ class MazeGenerator:
         start_cell = self.grid[entry_y][entry_x]
         start_cell.visited = True
 
-        stack: list = [(entry_x, entry_y)]
+        stack: List[Tuple[int, int]] = [(entry_x, entry_y)]
 
         while stack:
             x, y = stack[-1]
-            neighbors: list = []
+            neighbors: List[Tuple[int, int]] = []
 
             if y > 0 and not self.grid[y-1][x].visited:
                 if (x, y-1) not in self.pattern_cells:
@@ -133,8 +133,8 @@ class MazeGenerator:
             else:
                 stack.pop()
 
-    def _get_neighbors(self, x: int, y: int) -> list:
-        neighbors = []
+    def _get_neighbors(self, x: int, y: int) -> List[Tuple[int, int]]:
+        neighbors: List[Tuple[int, int]] = []
 
         if y > 0 and (x, y-1) not in self.pattern_cells:
             neighbors.append((x, y-1))
@@ -171,7 +171,7 @@ class MazeGenerator:
 
         start_x, start_y = start
         visited = set()
-        frontier = []
+        frontier: List[Tuple[int, int]] = []
 
         self.grid[start_y][start_x].visited = True
         visited.add((start_x, start_y))
@@ -222,7 +222,7 @@ class MazeGenerator:
                   exit: Tuple[int, int],
                   display: Optional[MazeDisplay] = None,
                   delay: float = 0.05) -> str:
-        queue: deque = deque()
+        queue: deque[Tuple[int, int]] = deque()
         queue.append(entry)
 
         visited: Set[Tuple[int, int]] = set()
@@ -267,7 +267,7 @@ class MazeGenerator:
                 visited.add((x-1, y))
                 parent[(x-1, y)] = ((x, y), "W")
 
-        path: list = []
+        path: List[str] = []
         current = exit
         while current != entry:
             if current not in parent:
@@ -284,7 +284,7 @@ class MazeGenerator:
                        path: str) -> None:
         with open(filename, "w") as f:
             for y in range(self.height):
-                row: list = []
+                row: List[str] = []
                 for x in range(self.width):
                     cell = self.grid[y][x]
                     value: int = 0

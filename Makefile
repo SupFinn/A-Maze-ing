@@ -1,6 +1,6 @@
 PYTHON = python3
 PIP = pip3
-MAIN_SCRIPT = a_maze_ing.py
+MAIN_SCRIPT = main.py
 CONFIG_FILE = config.txt
 
 install:
@@ -37,7 +37,7 @@ lint-strict:
 	flake8 .
 	@echo ""
 	@echo "Running mypy (strict mode)..."
-	mypy . --strict
+	mypy . --strict --explicit-package-bases
 	@echo ""
 	@echo "Strict linting complete!"
 
