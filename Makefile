@@ -1,6 +1,6 @@
 PYTHON = python3
 PIP = pip3
-MAIN_SCRIPT = main.py
+MAIN_SCRIPT = a_maze_ing.py
 CONFIG_FILE = config.txt
 
 install:

@@ -1,8 +1,8 @@
 import sys
 import os
 from config_validation import read_config, validation
-from maze_generator import MazeGenerator
-from maze_display import MazeDisplay
+from mazegen import MazeGenerator
+from mazegen.maze_display import MazeDisplay
 from typing import Tuple
 
 

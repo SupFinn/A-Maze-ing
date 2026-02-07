@@ -2,17 +2,7 @@ from typing import Tuple, Optional, Set, Dict, List
 from collections import deque
 import random
 import time
-from maze_display import MazeDisplay
-
-
-class Cell:
-    def __init__(self) -> None:
-        """Initialize a cell with all walls closed."""
-        self.north: bool = True
-        self.east: bool = True
-        self.south: bool = True
-        self.west: bool = True
-        self.visited: bool = False
+from mazegen.maze_display import MazeDisplay, Cell
 
 
 class MazeGenerator:
@@ -200,7 +190,7 @@ class MazeGenerator:
                         frontier.append((nx, ny))
 
                 if display is not None:
-                    from maze_display import MazeDisplay
+                    from mazegen.maze_display import MazeDisplay
                     MazeDisplay.clear_screen()
                     display.display_ascii(
                         self.grid,

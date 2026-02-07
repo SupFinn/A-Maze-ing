@@ -1,5 +1,14 @@
 from typing import Tuple, Optional, Set, List
-from maze_generator import Cell
+
+
+class Cell:
+    def __init__(self) -> None:
+        """Initialize a cell with all walls closed."""
+        self.north: bool = True
+        self.east: bool = True
+        self.south: bool = True
+        self.west: bool = True
+        self.visited: bool = False
 
 
 class MazeDisplay:
