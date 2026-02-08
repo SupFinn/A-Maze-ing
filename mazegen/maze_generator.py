@@ -13,9 +13,8 @@ class MazeGenerator:
         self.width: int = width
         self.height: int = height
         self.pattern_cells: Set[Tuple[int, int]] = set()
+        self.random = random.random(seed)
 
-        if seed is not None:
-            random.seed(seed)
 
         self.grid: List[List[Cell]] = []
         for y in range(self.height):
@@ -65,7 +64,7 @@ class MazeGenerator:
     def generate_backtracking(self,
                               entry: Tuple[int, int],
                               display: Optional[MazeDisplay] = None,
-                              delay: float = 0.05) -> None:
+                              delay: float = 0.05) -> List[List[Cell]]:
         entry_x, entry_y = entry
         start_cell = self.grid[entry_y][entry_x]
         start_cell.visited = True
@@ -93,7 +92,7 @@ class MazeGenerator:
                     neighbors.append((x-1, y))
 
             if neighbors:
-                next_x, next_y = random.choice(neighbors)
+                next_x, next_y = self.random.choice(neighbors)
                 current = self.grid[y][x]
                 neighbor = self.grid[next_y][next_x]
 
@@ -122,6 +121,7 @@ class MazeGenerator:
                     time.sleep(delay)
             else:
                 stack.pop()
+        return self.grid
 
     def _get_neighbors(self, x: int, y: int) -> List[Tuple[int, int]]:
         neighbors: List[Tuple[int, int]] = []
@@ -157,7 +157,7 @@ class MazeGenerator:
     def generate_prims(self,
                        start: Tuple[int, int],
                        display: Optional[MazeDisplay] = None,
-                       delay: float = 0.02) -> None:
+                       delay: float = 0.02) -> List[List[Cell]]:
 
         start_x, start_y = start
         visited = set()
@@ -171,14 +171,14 @@ class MazeGenerator:
                 frontier.append(neighbor)
 
         while frontier:
-            current_x, current_y = random.choice(frontier)
+            current_x, current_y = self.random.choice(frontier)
             frontier.remove((current_x, current_y))
 
             neighbors = self._get_neighbors(current_x, current_y)
             visited_neighbors = [n for n in neighbors if n in visited]
 
             if visited_neighbors:
-                neighbor_x, neighbor_y = random.choice(visited_neighbors)
+                neighbor_x, neighbor_y = self.random.choice(visited_neighbors)
 
                 self._remove_wall(current_x, current_y, neighbor_x, neighbor_y)
 
@@ -201,6 +201,7 @@ class MazeGenerator:
                         show_generation=True
                     )
                     time.sleep(delay)
+        return self.grid
 
     def reset_visited(self) -> None:
         for y in range(self.height):
@@ -298,9 +299,9 @@ class MazeGenerator:
                 if (x, y) in self.pattern_cells:
                     continue
 
-                if random.random() < chance:
+                if self.random.random() < chance:
                     cell = self.grid[y][x]
-                    direction = random.choice(["N", "E", "S", "W"])
+                    direction = self.random.choice(["N", "E", "S", "W"])
 
                     if direction == "N" and y > 0:
                         if (x, y-1) not in self.pattern_cells:
