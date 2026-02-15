@@ -52,8 +52,8 @@ def choose_algorithm(current: str) -> str:
     """Prompt user to select a maze generation algorithm."""
     print(f"\nCurrent algorithm: {current.upper()}")
     print("\nAvailable algorithms:")
-    print("  1. Backtracking (DFS) - Long winding corridors")
-    print("  2. Prim's Algorithm - Branching tree-like structure")
+    print("  1. Backtracking Algorithm - (DFS)")
+    print("  2. Prim's Algorithm")
 
     choice = input("\nChoose algorithm (1-2): ").strip()
 
@@ -315,8 +315,8 @@ def main() -> None:
             clear_screen()
             print("Saving final maze to file...")
             maze.write_maze_hex(output, entry, exit_, path)
-            print(f"Maze saved to: {output}")
-            print("\nGoodbye!")
+            print(f"Maze saved to: {output} 💾")
+            print("\nGoodbye!👋☺️")
             sys.exit(0)
 
         else:
