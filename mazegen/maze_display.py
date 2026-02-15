@@ -162,5 +162,5 @@ class MazeDisplay:
                 if cell.south:
                     print(f"{self.colors['wall']}+---{self.RESET}", end="")
                 else:
-                    print(f"{self.colors['wall']}+{self.RESET}   ", end="")
+                    print(f"{self.colors['wall']}+   {self.RESET}", end="")
             print(f"{self.colors['wall']}+{self.RESET}")
