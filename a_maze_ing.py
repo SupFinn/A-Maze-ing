@@ -130,6 +130,7 @@ def main() -> None:
 
     maze = MazeGenerator(width, height, seed=seed)
     maze.add_42_pattern()
+    maze.check_pattern_cells(entry, exit_)
     maze.generate_backtracking(entry, display=display, delay=animation_speed)
     maze.reset_visited()
 

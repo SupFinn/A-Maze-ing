@@ -72,6 +72,16 @@ class MazeGenerator:
 
         return True
 
+    def check_pattern_cells(self,
+                            entry: Tuple[int, int],
+                            exit_: Tuple[int, int]) -> None:
+        if entry in self.pattern_cells or exit_ in self.pattern_cells:
+            print(
+                "Error Catched: Entry() and Exit() "
+                "can't be in the 42 Pattern Cells"
+                )
+            sys.exit(1)
+
     def _remove_wall(self, x1: int, y1: int, x2: int, y2: int) -> None:
         """Remove wall between two adjacent cells."""
         cell1 = self.grid[y1][x1]

@@ -29,7 +29,7 @@ lint:
 	flake8 .
 	@echo ""
 	@echo "Running mypy..."
-	@mypy . --explicit-package-bases --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	@mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 	@echo ""
 	@echo "Linting complete!"
 
@@ -38,7 +38,7 @@ lint-strict:
 	flake8 .
 	@echo ""
 	@echo "Running mypy (strict mode)..."
-	mypy . --strict --explicit-package-bases
+	mypy . --strict
 	@echo ""
 	@echo "Strict linting complete!"
 
